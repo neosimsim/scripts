@@ -1,2 +1,2 @@
-PREFIX=$(HOME)/.local/bin
-BINS=remtrail
+PREFIX=$(HOME)/.local
+BINS=mkgit remtrail

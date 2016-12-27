@@ -1,9 +1,10 @@
 include config.mk
 
 install:
-	$(foreach BIN, $(BINS), cp $(PWD)/$(BIN) $(PREFIX)/$(BIN))
+	cp $(BINS) $(PREFIX)/bin
 
 uninstall:
-	$(foreach BIN, $(BINS), rm -f $(PREFIX)/$(BIN))
+	cd $(PREFIX)/bin
+	rm -f $(BINS)
 
 .PHONY: install uninstall
