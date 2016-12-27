@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if test -z $1; then
+	echo "Need one argument: project name"
+	exit 1
+fi 
+
+GITDIR=git/
+PROJECT=$1
+SERVER=safcon
+USER=neosimsim
+PROJECTDIR=$GITDIR$PROJECT.git
+
+ssh -l $USER $SERVER "mkdir -p $PROJECTDIR && cd $PROJECTDIR && git init --bare"
