@@ -1,11 +1,11 @@
-include config.mk
-
 PREFIX=$(HOME)/.local
 MANPREFIX=$(PREFIX)/share/man
 
 BIN = mkgit \
 	remtrail \
-	bat
+	bat \
+	hi
+
 MAN = $(BIN:=.1)
 
 install:
