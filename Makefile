@@ -4,7 +4,8 @@ MANPREFIX=$(PREFIX)/share/man
 BIN = mkgit \
 	remtrail \
 	bat \
-	hi
+	hi \
+	keystore
 
 MAN = $(BIN:=.1)
 
