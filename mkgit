@@ -1,14 +1,19 @@
 #!/bin/sh
 
-if test -z $1; then
-	echo "Need one argument: project name"
+if [ $# -lt 3 ] ; then
+	echo "usage <project name> <ssh user name> <server addres> [port]"
 	exit 1
-fi 
+fi
 
-GITDIR=git/
 PROJECT=$1
-SERVER=safcon
-USER=neosimsim
-PROJECTDIR=$GITDIR$PROJECT.git
+USER=$2
+SERVER=$3
+GITDIR=git
+PROJECTDIR=$GITDIR/$PROJECT.git
+if test -z $4; then
+	PORT=22
+else
+	PORT=$4
+fi
 
-ssh -l $USER $SERVER "mkdir -p $PROJECTDIR && cd $PROJECTDIR && git init --bare"
+ssh -p $PORT -l $USER $SERVER "mkdir -p $PROJECTDIR && cd $PROJECTDIR && git init --bare"
