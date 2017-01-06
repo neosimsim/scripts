@@ -1,0 +1,7 @@
+#!/bin/sh
+
+delay=1
+
+while xsetroot -name "$(date +%H:%M)"; do
+	sleep $delay
+done
