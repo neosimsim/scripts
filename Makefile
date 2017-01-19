@@ -5,7 +5,8 @@ BIN = mkgit \
 	remtrail \
 	bat \
 	hi \
-	xname
+	xname \
+	keystore
 
 MAN = $(BIN:=.1)
 
