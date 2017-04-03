@@ -6,7 +6,8 @@ BIN = mkgit \
 	bat \
 	hi \
 	xname \
-	keystore
+	keystore \
+	passgen
 
 MAN = $(BIN:=.1)
 
