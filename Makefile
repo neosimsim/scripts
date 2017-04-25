@@ -1,4 +1,4 @@
-PREFIX=$(HOME)/.local
+PREFIX=/usr/local
 MANPREFIX=$(PREFIX)/share/man
 
 BIN = mkgit \
