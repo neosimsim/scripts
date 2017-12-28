@@ -1,4 +1,4 @@
-PREFIX=/usr/local
+PREFIX=$(HOME)/.local
 MANPREFIX=$(PREFIX)/share/man
 
 BIN = mkgit \
@@ -7,9 +7,11 @@ BIN = mkgit \
 	hi \
 	xname \
 	keystore \
-	passgen
+	passgen \
+	dpass
 
 MAN = $(BIN:=.1)
+MAN = mkgit
 
 install:
 	mkdir -p $(PREFIX)/bin
