@@ -11,7 +11,10 @@ BIN = mkgit \
 	dpass \
 	a+ \
 	a- \
-	agofmt
+	agofmt \
+	cpright \
+	gpl3 \
+	gpl3n
 
 # MAN = $(BIN:=.1)
 

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Copyright © Alexander Ben Nasrallah `date +%Y` <abn@posteo.de>"
+
