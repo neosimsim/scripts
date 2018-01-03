@@ -9,7 +9,9 @@ BIN = mkgit \
 	keystore \
 	passgen \
 	dpass \
-	acme
+	a+ \
+	a- \
+	agofmt
 
 # MAN = $(BIN:=.1)
 
