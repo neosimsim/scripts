@@ -1,5 +1,19 @@
 #!/bin/sh
 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+gpl3() {
 cat <<EOF
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -677,3 +691,108 @@ Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
 
 EOF
+}
+
+gpl3notice() {
+cat <<EOF
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+EOF
+}
+
+wtfpl() {
+cat <<EOF
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                    Version 2, December 2004 
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+
+ Everyone is permitted to copy and distribute verbatim or modified 
+ copies of this license document, and changing it is allowed as long 
+ as the name is changed. 
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+
+EOF
+}
+
+copyright() {
+echo "Copyright © Alexander Ben Nasrallah `date +%Y` <abn@posteo.de>"
+}
+
+usage() {
+cat >/dev/stderr <<EOF
+USAGE
+$0 [-n|-h] [-l <gpl3|wtfpl|cp>]
+
+	-l <license> print content of the license
+	-n           print notice of the license
+	-h           print usage
+
+Print the content of the given license. If the n flag is given
+a short notice of the license is printed.
+
+LICENSE
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+EOF
+}
+
+printlicense() {
+	case $1 in
+	gpl3) gpl3 ;;
+	wtfpl) wtfpl ;;
+	cp) copyright ;;
+	*) echo "Unknown license $1." > /dev/stderr; exit 1;
+	esac
+}
+
+printnotice() {
+	case $1 in
+	gpl3) gpl3notice ;;
+	*) echo "No notice available for $1." > /dev/stderr; exit 1;
+	esac
+}
+
+license=gpl3
+notice=
+
+while getopts 'l:nh' name
+do
+	case $name in
+	l) license=$OPTARG ;;
+	n) notice=1 ;;
+	*) usage; exit 1 ;;
+	esac
+done
+
+if [[ ! -z $notice ]]
+then
+	printnotice $license
+else
+	printlicense $license
+fi

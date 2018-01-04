@@ -12,9 +12,7 @@ BIN = mkgit \
 	a+ \
 	a- \
 	agofmt \
-	cpright \
-	gpl3 \
-	gpl3n \
+	license \
 	cmnt \
 	ucmnt
 
