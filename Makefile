@@ -15,7 +15,8 @@ BIN = mkgit \
 	cpright \
 	gpl3 \
 	gpl3n \
-	cmnt
+	cmnt \
+	ucmnt
 
 # MAN = $(BIN:=.1)
 
