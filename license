@@ -15,6 +15,64 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+usage() {
+cat >/dev/stderr <<EOF
+USAGE
+$0 [-n|-h] [-l <gpl3|lglp3|wtfpl|cp|bsd3>]
+	-l <license> print content of the license
+	-n           print notice of the license
+	-h           print usage
+
+Print the content of the given license. If the n flag is given
+a short notice of the license is printed.
+
+LICENSE
+EOF
+gpl3notice
+}
+
+bsd3() {
+echo BSD 3-Clause License
+echo
+copyright
+cat <<EOF
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+EOF
+}
+
+bsd3notice() {
+copyright
+cat <<EOF
+Use of this source code is governed by a BSD 3-clause
+style license that can be found in the LICENSE file.
+EOF
+}
+
 gpl3() {
 cat <<EOF
                     GNU GENERAL PUBLIC LICENSE
@@ -907,27 +965,12 @@ copyright() {
 echo "Copyright © `date +%Y`, Alexander Ben Nasrallah <me@abn.sh>"
 }
 
-usage() {
-cat >/dev/stderr <<EOF
-USAGE
-$0 [-n|-h] [-l <gpl3|lglp3|wtfpl|cp>]
-	-l <license> print content of the license
-	-n           print notice of the license
-	-h           print usage
-
-Print the content of the given license. If the n flag is given
-a short notice of the license is printed.
-
-LICENSE
-EOF
-gpl3notice
-}
-
 printlicense() {
 	case $1 in
 	gpl3) gpl3 ;;
 	lgpl3) lgpl3 ;;
 	wtfpl) wtfpl ;;
+	bsd3) bsd3 ;;
 	cp) copyright ;;
 	*) echo "Unknown license $1." > /dev/stderr; exit 1;
 	esac
@@ -937,6 +980,7 @@ printnotice() {
 	case $1 in
 	gpl3) gpl3notice ;;
 	lgpl3) lgpl3notice ;;
+	bsd3) bsd3notice ;;
 	*) echo "No notice available for $1." > /dev/stderr; exit 1;
 	esac
 }
@@ -959,3 +1003,4 @@ then
 else
 	printlicense $license
 fi
+
