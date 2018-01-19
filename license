@@ -904,7 +904,7 @@ EOF
 }
 
 copyright() {
-echo "Copyright © Alexander Ben Nasrallah `date +%Y` <abn@posteo.de>"
+echo "Copyright © `date +%Y`, Alexander Ben Nasrallah <me@abn.sh>"
 }
 
 usage() {
