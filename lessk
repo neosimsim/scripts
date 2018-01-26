@@ -6,6 +6,16 @@ exec /usr/local/bin/wish8.5 "$0" -- "$@"
 # Use of this source code is governed by a BSD 3-clause
 # style license that can be found in the LICENSE file.
 
+# TODO
+# hotkeys for
+# e: open current file in editor (use plumb)
+# f,b: forwards backwards
+# /,?: search forward backward
+#
+# select text to plumb
+# evaluate $tabstop
+# get font from args
+
 package require Tk
 
 wm title . "less"
