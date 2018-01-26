@@ -14,7 +14,8 @@ BIN = mkgit \
 	agofmt \
 	license \
 	cmnt \
-	ucmnt
+	ucmnt \
+	acme
 
 # MAN = $(BIN:=.1)
 
