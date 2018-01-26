@@ -15,7 +15,8 @@ BIN = mkgit \
 	license \
 	cmnt \
 	ucmnt \
-	acme
+	acme \
+	lessk
 
 # MAN = $(BIN:=.1)
 
