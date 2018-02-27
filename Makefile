@@ -16,13 +16,14 @@ BIN = mkgit \
 	cmnt \
 	ucmnt \
 	acme \
-	lessk
+	lessk \
+	quote
 
 # MAN = $(BIN:=.1)
 
 install:
 	mkdir -p $(PREFIX)/bin
-	cp $(BIN) $(PREFIX)/bin
+	cp -f $(BIN) $(PREFIX)/bin
 
 uninstall:
 	cd $(PREFIX)/bin && rm -f $(BIN)
