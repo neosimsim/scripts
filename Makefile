@@ -17,7 +17,8 @@ BIN = mkgit \
 	ucmnt \
 	acme \
 	lessk \
-	quote
+	quote \
+	open
 
 # MAN = $(BIN:=.1)
 
