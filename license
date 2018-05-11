@@ -954,6 +954,22 @@ cat <<EOF
 EOF
 }
 
+go() {
+cat <<EOF
+Copyright `date +%Y` The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+EOF
+}
+
+go() {
+cat <<EOF
+Copyright `date +%Y` The Upspin Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+EOF
+}
+
 copyright() {
 echo "Copyright © `date +%Y`, Alexander Ben Nasrallah <me@abn.sh>"
 }
@@ -964,6 +980,8 @@ printlicense() {
 	lgpl3) lgpl3 ;;
 	wtfpl) wtfpl ;;
 	bsd3) bsd3 ;;
+	go) go ;;
+	upspin) upspin ;;
 	cp) copyright ;;
 	*) echo "Unknown license $1." > /dev/stderr; exit 1;
 	esac
@@ -990,7 +1008,7 @@ do
 	esac
 done
 
-if [[ ! -z $notice ]]
+if [ ! -z $notice ]
 then
 	printnotice $license
 else
