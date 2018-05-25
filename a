@@ -1,0 +1,12 @@
+#!/usr/bin/sh
+
+export tabstop=4
+export TERM=dumb
+export acmeshell="$PLAN9/bin/rc"
+export SHELL="$PLAN9/bin/rc"
+export GIT_PAGER=cat
+export PAGER=cat
+export EDITOR=E
+
+9 $PLAN9/bin/acme -f /mnt/font/'Liberation Mono'/12a/font -F /mnt/font/'Liberation Mono12'/10a/font
+

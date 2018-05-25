@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-export acmeshell="$PLAN9"/bin/rc
-export tabstop=4
-export TERM=dumb
-
-9 acme -f /mnt/font/'Liberation Mono'/10a/font -F /mnt/font/'Liberation Mono'/10a/font
-

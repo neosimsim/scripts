@@ -1,24 +1,25 @@
-PREFIX=$(HOME)/.local
+PREFIX=$(HOME)
 MANPREFIX=$(PREFIX)/share/man
 
-BIN = mkgit \
-	remtrail \
-	bat \
-	hi \
-	xname \
-	keystore \
-	passgen \
-	dpass \
+BIN = \
 	a+ \
 	a- \
+	a \
 	agofmt \
-	license \
+	bat \
 	cmnt \
-	ucmnt \
-	acme \
+	dpass \
+	hi \
+	keystore \
 	lessk \
+	license \
+	mkgit \
+	open \
+	passgen \
 	quote \
-	open
+	remtrail \
+	ucmnt \
+	xname \
 
 # MAN = $(BIN:=.1)
 
