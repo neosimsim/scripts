@@ -24,7 +24,9 @@ grid [ttk::frame .container -padding "0 0 0 0"] -column 0 -row 0 -sticky nwes
 grid columnconfigure . 0 -weight 1
 grid rowconfigure . 0 -weight 1
 
-grid [tk::text .container.content -width 10 -height 10 -font {{Liberation Mono} 12}] -column 0 -row 0 -sticky nwes
+set font {{Liberation Mono} 12}
+set tabstop 4
+grid [tk::text .container.content -width 10 -height 10 -font $font -tabs "[expr {$tabstop * [font measure $font 0]}] left"] -column 0 -row 0 -sticky nwes
 grid columnconfigure .container 0 -weight 1
 grid rowconfigure .container 0 -weight 1
 
