@@ -2,9 +2,9 @@ PREFIX=$(HOME)
 MANPREFIX=$(PREFIX)/share/man
 
 BIN = \
+	a \
 	a+ \
 	a- \
-	a \
 	agofmt \
 	bat \
 	cmnt \
@@ -18,6 +18,8 @@ BIN = \
 	passgen \
 	quote \
 	remtrail \
+	tmux-run-selection-with \
+	tmux-select-word \
 	ucmnt \
 	xname \
 
