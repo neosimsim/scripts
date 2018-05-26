@@ -962,7 +962,7 @@ license that can be found in the LICENSE file.
 EOF
 }
 
-go() {
+upspin() {
 cat <<EOF
 Copyright `date +%Y` The Upspin Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
