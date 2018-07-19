@@ -13,14 +13,17 @@ BIN = \
 	keystore \
 	lessk \
 	license \
+	lower \
 	mkgit \
 	open \
 	passgen \
 	quote \
 	remtrail \
+	splitcammel \
 	tmux-run-selection-with \
 	tmux-select-word \
 	ucmnt \
+	upper \
 	xname \
 
 # MAN = $(BIN:=.1)
