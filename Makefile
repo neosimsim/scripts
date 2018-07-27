@@ -8,6 +8,7 @@ BIN = \
 	agofmt \
 	bat \
 	cmnt \
+	codespell \
 	dpass \
 	hi \
 	keystore \
