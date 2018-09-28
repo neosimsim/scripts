@@ -10,6 +10,7 @@ BIN = \
 	cmnt \
 	codespell \
 	dpass \
+	filter \
 	hi \
 	keystore \
 	lessk \
