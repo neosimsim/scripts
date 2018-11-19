@@ -8,5 +8,5 @@ export GIT_PAGER=cat
 export PAGER=cat
 export EDITOR=E
 
-9 $PLAN9/bin/acme -f /mnt/font/'Liberation Mono'/12a/font -F /mnt/font/'Liberation Mono12'/10a/font
+9 $PLAN9/bin/acme -f /mnt/font/LiberationMono/11a/font -F /mnt/font/LiberationMono/10a/font
 
