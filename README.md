@@ -1,10 +1,9 @@
-Collection of script file
+Collection of script files
 
 ## Configure
-To change install destination or set of scripts to be installed
-change **PREFIX** in Makefile.
+To change the installation destination or set of scripts to be installed change
+**PREFIX** in Makefile.
 
 ## Install
-```sh
-make install
-```
+
+	make install
