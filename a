@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 export tabstop=4
 export TERM=dumb
