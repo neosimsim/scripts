@@ -956,7 +956,7 @@ EOF
 
 go() {
 cat <<EOF
-Copyright `date +%Y` The Go Authors. All rights reserved.
+Copyright `year` The Go Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 EOF
@@ -964,14 +964,14 @@ EOF
 
 upspin() {
 cat <<EOF
-Copyright `date +%Y` The Upspin Authors. All rights reserved.
+Copyright `year` The Upspin Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 EOF
 }
 
 copyright() {
-echo "Copyright © `date +%Y`, Alexander Ben Nasrallah <me@abn.sh>"
+echo "Copyright © `year`, Alexander Ben Nasrallah <me@abn.sh>"
 }
 
 printlicense() {
