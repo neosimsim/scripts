@@ -27,6 +27,7 @@ BIN = \
 	ucmnt \
 	upper \
 	xname \
+	year \
 
 # MAN = $(BIN:=.1)
 
