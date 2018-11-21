@@ -1,22 +1,12 @@
-#!/usr/bin/awk -f
+#!/bin/sh
 
 # Copyright © 2018, Alexander Ben Nasrallah <me@abn.sh>
 # Use of this source code is governed by a BSD 3-clause
 # style license that can be found in the LICENSE file.
 
-BEGIN {
-	if (chars == "") {
-		chars = "//"
-	}
-	if (ARGC > 1) {
-		usage = sprintf("usage: %s [awk args] [-v chars=<chars (default: //)>] [-- -?]", "cmnt")
-		print usage  > "/dev/stderr"
-		print ""  > "/dev/stderr"
-		print "Insert charactern at the beginning of each line." > "/dev/stderr"
-		exit 1
-	}
-}
+chars=${1:-//}
 
+awk -v chars=$chars '
 /^./ {
 	sub("^.", chars " &")
 	print
@@ -26,3 +16,4 @@ BEGIN {
 	sub("^$", chars)
 	print
 }
+'
