@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Copyright © 2018, Alexander Ben Nasrallah <me@abn.sh>
+# Use of this source code is governed by a BSD 3-clause
+# style license that can be found in the LICENSE file.
+
+# The idea of this script is based on 'The Unix Programming Language'.
+
+
+echo '# To unbundle, run this file'
+for i
+do
+	echo "echo $i"
+	echo "mkdir -p `dirname $i`"
+	echo "sed 's/.//' >$i <<'//GO.SYSIN DD $i'"
+	sed "s/^/-/" $i
+	echo "//GO.SYSIN DD $i"
+done

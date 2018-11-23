@@ -7,6 +7,7 @@ BIN = \
 	a- \
 	agofmt \
 	bat \
+	bundle \
 	cmnt \
 	codespell \
 	dpass \
