@@ -12,6 +12,7 @@ BIN = \
 	codespell \
 	dpass \
 	filter \
+	getmod \
 	hi \
 	keystore \
 	lessk \
