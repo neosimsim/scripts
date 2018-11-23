@@ -4,16 +4,32 @@
 # Use of this source code is governed by a BSD 3-clause
 # style license that can be found in the LICENSE file.
 
-# The idea of this script is based on 'The Unix Programming Language'.
+# The idea of this script is based on 'The UNIX Programming Environment'.
+
+_bundle() {
+	if [ "$1" == "." ]
+	then
+		return
+	fi
+	# This creates parents with proper permissions.
+	# Parents might be created multiple times.
+	_bundle `dirname $1`
+	echo "echo $1"
+	if [ -d $1 ]
+	then
+		echo "mkdir -p $1"
+	else
+		echo "sed 's/.//' >$1 <<'//GO.SYSIN DD $1'"
+		sed "s/^/-/" $1
+		echo "//GO.SYSIN DD $1"
+	fi
+	echo "chmod `getmod $1` $1"
+}
 
 echo '#!/bin/sh'
 echo
 echo '# To unbundle, run this file'
 for i
 do
-	echo "echo $i"
-	echo "mkdir -p `dirname $i`"
-	echo "sed 's/.//' >$i <<'//GO.SYSIN DD $i'"
-	sed "s/^/-/" $i
-	echo "//GO.SYSIN DD $i"
+	_bundle $i
 done
