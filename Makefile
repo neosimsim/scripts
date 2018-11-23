@@ -14,6 +14,7 @@ BIN = \
 	filter \
 	getmod \
 	hi \
+	hsinit \
 	keystore \
 	lessk \
 	license \
