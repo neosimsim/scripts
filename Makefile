@@ -21,6 +21,7 @@ BIN = \
 	lower \
 	mkgit \
 	open \
+	overwrite \
 	passgen \
 	quote \
 	remtrail \
