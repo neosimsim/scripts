@@ -23,6 +23,7 @@ BIN = \
 	open \
 	overwrite \
 	passgen \
+	pick \
 	quote \
 	remtrail \
 	splitcammel \
