@@ -33,6 +33,7 @@ BIN = \
 	upper \
 	xname \
 	year \
+	zap \
 
 # MAN = $(BIN:=.1)
 
