@@ -6,6 +6,7 @@ BIN = \
 	a+ \
 	a- \
 	agofmt \
+	Ahfmt \
 	bat \
 	bundle \
 	cmnt \
