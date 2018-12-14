@@ -2,7 +2,7 @@
 
 fn aread { 9p read acme/$winid/$1 }
 fn awrite { 9p write acme/$winid/$1 }
-ftmp=`{mktemp /tmp/Ahfmt.XXXXXX}
+ftmp=`{mktemp /tmp/Ahfmt.XXXXXX.hs}
 etmp=`{mktemp /tmp/Ahfmt.XXXXXX}
 
 if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
@@ -22,6 +22,9 @@ if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
                echo -n 'dot=addr' | awrite ctl
                echo -n show | awrite ctl
        }
+       # get suggestions
+       hfmt $ftmp | sed 's|^'$ftmp'|'^$%^'|'
+       exit 0
 }
 if not {
        sed 's|^/dev/stdin|'^$%^'|' $etmp >[1=2]
