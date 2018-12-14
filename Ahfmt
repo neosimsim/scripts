@@ -4,7 +4,8 @@ fn aread { 9p read acme/$winid/$1 }
 fn awrite { 9p write acme/$winid/$1 }
 ftmp=`{mktemp /tmp/Ahfmt.XXXXXX}
 etmp=`{mktemp /tmp/Ahfmt.XXXXXX}
-if (aread body | hfmt -s >$ftmp >[2]$etmp) {
+
+if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
        # If the file is formatted allready `hfmt` don't print anything
        if (du $ftmp | awk '{exit $1 != 0}') {
                exit 0
