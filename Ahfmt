@@ -6,8 +6,8 @@ ftmp=`{mktemp /tmp/Ahfmt.XXXXXX}
 etmp=`{mktemp /tmp/Ahfmt.XXXXXX}
 
 if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
-       # If the file is formatted allready `hfmt` don't print anything
-       if (du $ftmp | awk '{exit $1 != 0}') {
+       # If the file is formatted already `hfmt` doesn't print anything
+       if (cmp /dev/null $ftmp >/dev/null >[2=1]) {
                exit 0
        }
        # Don't dirty the window if you don't have to
