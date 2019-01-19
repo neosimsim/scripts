@@ -1,24 +1,103 @@
 #!/bin/sh
 
 # To unbundle, run this file
-echo .gitignore
-sed 's/.//' >.gitignore <<'//GO.SYSIN DD .gitignore'
--dist-newstyle
--dist
--.ghc.environment.*
-//GO.SYSIN DD .gitignore
-chmod 644 .gitignore
-echo CHANGELOG.md
-sed 's/.//' >CHANGELOG.md <<'//GO.SYSIN DD CHANGELOG.md'
+echo ./app
+mkdir -p ./app
+chmod 755 ./app
+echo ./app
+mkdir -p ./app
+chmod 755 ./app
+echo ./app/Main.hs
+sed 's/.//' >./app/Main.hs <<'//GO.SYSIN DD ./app/Main.hs'
+-module Main
+-  ( main
+-  ) where
+-
+-import           Lib
+-
+-main :: IO ()
+-main = putStrLn msg
+//GO.SYSIN DD ./app/Main.hs
+chmod 644 ./app/Main.hs
+echo ./CHANGELOG.md
+sed 's/.//' >./CHANGELOG.md <<'//GO.SYSIN DD ./CHANGELOG.md'
 -# Revision history for <app>
 -
 -## 0.1.0 -- YYYY-mm-dd
 -
 -* First version. Released on an unsuspecting world.
-//GO.SYSIN DD CHANGELOG.md
-chmod 644 CHANGELOG.md
-echo LICENSE
-sed 's/.//' >LICENSE <<'//GO.SYSIN DD LICENSE'
+//GO.SYSIN DD ./CHANGELOG.md
+chmod 644 ./CHANGELOG.md
+echo ./.gitignore
+sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
+-dist-newstyle
+-dist
+-.ghc.environment.*
+//GO.SYSIN DD ./.gitignore
+chmod 644 ./.gitignore
+echo ./hsinit
+sed 's/.//' >./hsinit <<'//GO.SYSIN DD ./hsinit'
+-#!/bin/sh
+-
+-# To unbundle, run this file
+-echo ./app
+-mkdir -p ./app
+-chmod 755 ./app
+-echo ./app
+-mkdir -p ./app
+-chmod 755 ./app
+-echo ./app/Main.hs
+-sed 's/.//' >./app/Main.hs <<'//GO.SYSIN DD ./app/Main.hs'
+--module Main
+--  ( main
+--  ) where
+--
+--import           Lib
+--
+--main :: IO ()
+--main = putStrLn msg
+-//GO.SYSIN DD ./app/Main.hs
+-chmod 644 ./app/Main.hs
+-echo ./CHANGELOG.md
+-sed 's/.//' >./CHANGELOG.md <<'//GO.SYSIN DD ./CHANGELOG.md'
+--# Revision history for <app>
+--
+--## 0.1.0 -- YYYY-mm-dd
+--
+--* First version. Released on an unsuspecting world.
+-//GO.SYSIN DD ./CHANGELOG.md
+-chmod 644 ./CHANGELOG.md
+-echo ./.gitignore
+-sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
+--dist-newstyle
+--dist
+--.ghc.environment.*
+-//GO.SYSIN DD ./.gitignore
+-chmod 644 ./.gitignore
+-echo ./hsinit
+-sed 's/.//' >./hsinit <<'//GO.SYSIN DD ./hsinit'
+//GO.SYSIN DD ./hsinit
+chmod 644 ./hsinit
+echo ./init
+sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
+-#!/bin/sh
+-
+-name=$(basename `pwd`)
+-name=${1:-$name}
+-
+-sed "s/<project>/$name/g" project.cabal >$name.cabal
+-
+-rm project.cabal
+-rm $0
+-
+-git init .
+-cp misc/git/pre-commit .git/hooks/
+-git add .
+-git commit -m 'initial commit'
+//GO.SYSIN DD ./init
+chmod 755 ./init
+echo ./LICENSE
+sed 's/.//' >./LICENSE <<'//GO.SYSIN DD ./LICENSE'
 -BSD 3-Clause License
 -
 -Copyright © 2018, Alexander Ben Nasrallah <me@abn.sh>
@@ -49,55 +128,25 @@ sed 's/.//' >LICENSE <<'//GO.SYSIN DD LICENSE'
 -OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 -OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -
-//GO.SYSIN DD LICENSE
-chmod 644 LICENSE
-echo Setup.hs
-sed 's/.//' >Setup.hs <<'//GO.SYSIN DD Setup.hs'
--import Distribution.Simple
--main = defaultMain
-//GO.SYSIN DD Setup.hs
-chmod 644 Setup.hs
-echo app
-mkdir -p app
-chmod 755 app
-echo app/Main.hs
-sed 's/.//' >app/Main.hs <<'//GO.SYSIN DD app/Main.hs'
--module Main
--  ( main
--  ) where
--
--import           Lib
--
--main :: IO ()
--main = putStrLn msg
-//GO.SYSIN DD app/Main.hs
-chmod 644 app/Main.hs
-echo init
-sed 's/.//' >init <<'//GO.SYSIN DD init'
--#!/bin/sh
--
--name=$(basename `pwd`)
--name=${1:-$name}
--
--sed "s/<project>/$name/g" project.cabal >$name.cabal
--cp misc/git/pre-commit .git/hooks/
--
--rm project.cabal
--rm $0
--
--git init .
--git add .
--git commit -m 'initial commit'
-//GO.SYSIN DD init
-chmod 755 init
-echo misc
-mkdir -p misc
-chmod 755 misc
-echo misc/git
-mkdir -p misc/git
-chmod 755 misc/git
-echo misc/git/pre-commit
-sed 's/.//' >misc/git/pre-commit <<'//GO.SYSIN DD misc/git/pre-commit'
+//GO.SYSIN DD ./LICENSE
+chmod 644 ./LICENSE
+echo ./misc
+mkdir -p ./misc
+chmod 755 ./misc
+echo ./misc
+mkdir -p ./misc
+chmod 755 ./misc
+echo ./misc/git
+mkdir -p ./misc/git
+chmod 755 ./misc/git
+echo ./misc
+mkdir -p ./misc
+chmod 755 ./misc
+echo ./misc/git
+mkdir -p ./misc/git
+chmod 755 ./misc/git
+echo ./misc/git/pre-commit
+sed 's/.//' >./misc/git/pre-commit <<'//GO.SYSIN DD ./misc/git/pre-commit'
 -#!/bin/sh
 -#
 -# An example hook script to verify what is about to be committed.
@@ -168,15 +217,15 @@ sed 's/.//' >misc/git/pre-commit <<'//GO.SYSIN DD misc/git/pre-commit'
 -	echo "Project can't be build. Please fix before."
 -	exit 1
 -fi
-//GO.SYSIN DD misc/git/pre-commit
-chmod 755 misc/git/pre-commit
-echo project.cabal
-sed 's/.//' >project.cabal <<'//GO.SYSIN DD project.cabal'
+//GO.SYSIN DD ./misc/git/pre-commit
+chmod 755 ./misc/git/pre-commit
+echo ./project.cabal
+sed 's/.//' >./project.cabal <<'//GO.SYSIN DD ./project.cabal'
 -name:                <project>
 -version:             0.1.0
 -synopsis:            ..
 -description:         ...
--homepage:            https://github.com/neosimsim/haskell-template
+-homepage:            https://github.com/neosimsim/<project>
 -license:             BSD3
 -license-file:        LICENSE
 -author:              Alexander Ben Nasrallah
@@ -189,7 +238,7 @@ sed 's/.//' >project.cabal <<'//GO.SYSIN DD project.cabal'
 -
 -source-repository head
 -  type:              git
--  location:          https://github.com/neosimsim/haskell-template
+-  location:          https://github.com/neosimsim/<project>
 -
 -flag develop
 -  description: Enable warnings and treat them as error.
@@ -224,13 +273,22 @@ sed 's/.//' >project.cabal <<'//GO.SYSIN DD project.cabal'
 -  build-depends:       base == 4.*, QuickCheck
 -  if flag(develop)
 -    ghc-options: -Wall -Werror -Wno-type-defaults
-//GO.SYSIN DD project.cabal
-chmod 644 project.cabal
-echo src
-mkdir -p src
-chmod 755 src
-echo src/Lib.hs
-sed 's/.//' >src/Lib.hs <<'//GO.SYSIN DD src/Lib.hs'
+//GO.SYSIN DD ./project.cabal
+chmod 644 ./project.cabal
+echo ./Setup.hs
+sed 's/.//' >./Setup.hs <<'//GO.SYSIN DD ./Setup.hs'
+-import Distribution.Simple
+-main = defaultMain
+//GO.SYSIN DD ./Setup.hs
+chmod 644 ./Setup.hs
+echo ./src
+mkdir -p ./src
+chmod 755 ./src
+echo ./src
+mkdir -p ./src
+chmod 755 ./src
+echo ./src/Lib.hs
+sed 's/.//' >./src/Lib.hs <<'//GO.SYSIN DD ./src/Lib.hs'
 --- | Template library
 -module Lib
 -  ( msg
@@ -239,13 +297,16 @@ sed 's/.//' >src/Lib.hs <<'//GO.SYSIN DD src/Lib.hs'
 --- | A message string
 -msg :: String
 -msg = "Hello Haskell!"
-//GO.SYSIN DD src/Lib.hs
-chmod 644 src/Lib.hs
-echo test
-mkdir -p test
-chmod 755 test
-echo test/Spec.hs
-sed 's/.//' >test/Spec.hs <<'//GO.SYSIN DD test/Spec.hs'
+//GO.SYSIN DD ./src/Lib.hs
+chmod 644 ./src/Lib.hs
+echo ./test
+mkdir -p ./test
+chmod 755 ./test
+echo ./test
+mkdir -p ./test
+chmod 755 ./test
+echo ./test/Spec.hs
+sed 's/.//' >./test/Spec.hs <<'//GO.SYSIN DD ./test/Spec.hs'
 -module Main
 -  ( main
 -  ) where
@@ -262,5 +323,5 @@ sed 's/.//' >test/Spec.hs <<'//GO.SYSIN DD test/Spec.hs'
 -  putStrLn "Hello, Haskell!"
 -  result <- quickCheckResult (prop_true :: Integer -> Bool)
 -  unless (isSuccess result) exitFailure
-//GO.SYSIN DD test/Spec.hs
-chmod 644 test/Spec.hs
+//GO.SYSIN DD ./test/Spec.hs
+chmod 644 ./test/Spec.hs
