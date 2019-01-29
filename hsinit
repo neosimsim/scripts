@@ -35,49 +35,6 @@ sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
 -.ghc.environment.*
 //GO.SYSIN DD ./.gitignore
 chmod 644 ./.gitignore
-echo ./hsinit
-sed 's/.//' >./hsinit <<'//GO.SYSIN DD ./hsinit'
--#!/bin/sh
--
--# To unbundle, run this file
--echo ./app
--mkdir -p ./app
--chmod 755 ./app
--echo ./app
--mkdir -p ./app
--chmod 755 ./app
--echo ./app/Main.hs
--sed 's/.//' >./app/Main.hs <<'//GO.SYSIN DD ./app/Main.hs'
---module Main
---  ( main
---  ) where
---
---import           Lib
---
---main :: IO ()
---main = putStrLn msg
--//GO.SYSIN DD ./app/Main.hs
--chmod 644 ./app/Main.hs
--echo ./CHANGELOG.md
--sed 's/.//' >./CHANGELOG.md <<'//GO.SYSIN DD ./CHANGELOG.md'
---# Revision history for <app>
---
---## 0.1.0 -- YYYY-mm-dd
---
---* First version. Released on an unsuspecting world.
--//GO.SYSIN DD ./CHANGELOG.md
--chmod 644 ./CHANGELOG.md
--echo ./.gitignore
--sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
---dist-newstyle
---dist
---.ghc.environment.*
--//GO.SYSIN DD ./.gitignore
--chmod 644 ./.gitignore
--echo ./hsinit
--sed 's/.//' >./hsinit <<'//GO.SYSIN DD ./hsinit'
-//GO.SYSIN DD ./hsinit
-chmod 644 ./hsinit
 echo ./init
 sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
 -#!/bin/sh
