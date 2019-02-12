@@ -152,22 +152,25 @@ sed 's/.//' >./misc/git/pre-commit <<'//GO.SYSIN DD ./misc/git/pre-commit'
 -fi
 -
 -# If there are whitespace errors, print the offending file names and fail.
--if ! git diff-index --check --cached $against -- ; then
+-if ! git diff-index --check --cached $against --
+-then
 -	exit 1
 -fi
 -
 -unformatted=$(hfmt -l)
--if [ -n "$unformatted" ]; then
+-if [ -n "$unformatted" ]
+-then
 -	echo "Haskell files must be formatted with hfmt. Please run:"
 -	for fn in $unformatted; do
 -		echo "  hfmt -w $fn"
 -	done
--    exit 1
+-	exit 1
 -fi
 -
--if ! (cabal check); then
+-if ! cabal check
+-then
 -	echo Fix the cabal project file before commit.
--    exit 1
+-	exit 1
 -fi
 -
 -if ! (cabal new-clean && cabal new-build --flags=develop && cabal new-test --flag=develop); then
