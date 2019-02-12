@@ -43,8 +43,12 @@ sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
 -name=${1:-$name}
 -
 -sed "s/<project>/$name/g" project.cabal >$name.cabal
+-cabal-fmt -i $name.cabal
+-sed "s/<project>/$name/g" misc/git/pre-commit.tmp >misc/git/pre-commit
+-chmod +x misc/git/pre-commit
 -
 -rm project.cabal
+-rm misc/git/pre-commit.tmp
 -rm $0
 -
 -git init .
@@ -102,8 +106,8 @@ chmod 755 ./misc
 echo ./misc/git
 mkdir -p ./misc/git
 chmod 755 ./misc/git
-echo ./misc/git/pre-commit
-sed 's/.//' >./misc/git/pre-commit <<'//GO.SYSIN DD ./misc/git/pre-commit'
+echo ./misc/git/pre-commit.tmp
+sed 's/.//' >./misc/git/pre-commit.tmp <<'//GO.SYSIN DD ./misc/git/pre-commit.tmp'
 -#!/bin/sh
 -#
 -# An example hook script to verify what is about to be committed.
@@ -169,7 +173,14 @@ sed 's/.//' >./misc/git/pre-commit <<'//GO.SYSIN DD ./misc/git/pre-commit'
 -
 -if ! cabal check
 -then
--	echo Fix the cabal project file before commit.
+-	echo "Fix the cabal project file before commit."
+-	exit 1
+-fi
+-
+-if ! (cabal-fmt <project>.cabal | cmp -s - <project>.cabal)
+-then
+-	echo "Format the cabal file. Please run:"
+-	echo "cabal-fmt -i <project>.cabal"
 -	exit 1
 -fi
 -
@@ -177,28 +188,29 @@ sed 's/.//' >./misc/git/pre-commit <<'//GO.SYSIN DD ./misc/git/pre-commit'
 -	echo "Project can't be build. Please fix before."
 -	exit 1
 -fi
-//GO.SYSIN DD ./misc/git/pre-commit
-chmod 755 ./misc/git/pre-commit
+//GO.SYSIN DD ./misc/git/pre-commit.tmp
+chmod 644 ./misc/git/pre-commit.tmp
 echo ./project.cabal
 sed 's/.//' >./project.cabal <<'//GO.SYSIN DD ./project.cabal'
--name:                <project>
--version:             0.1.0
--synopsis:            ..
--description:         ...
--homepage:            https://github.com/neosimsim/<project>
--license:             BSD3
--license-file:        LICENSE
--author:              Alexander Ben Nasrallah
--maintainer:          me@abn.sh
+-name:               <project>
+-version:            0.1.0
+-synopsis:           ..
+-description:        ...
+-homepage:           https://github.com/neosimsim/<project>
+-license:            BSD3
+-license-file:       LICENSE
+-author:             Alexander Ben Nasrallah
+-maintainer:         me@abn.sh
+-
 --- copyright:
--category:            Misc
--build-type:          Simple
--extra-source-files:  CHANGELOG.md
--cabal-version:       >=1.10
+-category:           Misc
+-build-type:         Simple
+-extra-source-files: CHANGELOG.md
+-cabal-version:      >=1.10
 -
 -source-repository head
--  type:              git
--  location:          https://github.com/neosimsim/<project>
+-  type:     git
+-  location: https://github.com/neosimsim/<project>
 -
 -flag develop
 -  description: Enable warnings and treat them as error.
@@ -206,31 +218,42 @@ sed 's/.//' >./project.cabal <<'//GO.SYSIN DD ./project.cabal'
 -  manual:      True
 -
 -library
--  exposed-modules: Lib
+-  exposed-modules:  Lib
+-
 -  -- other-modules:
 -  -- other-extensions:
--  build-depends:       base == 4.*
--  hs-source-dirs:      src
--  default-language:    Haskell2010
+-  build-depends:    base ==4.*
+-  hs-source-dirs:   src
+-  default-language: Haskell2010
+-
 -  if flag(develop)
 -    ghc-options: -Wall -Werror -Wno-type-defaults
 -
 -executable <project>
--  main-is:             Main.hs
+-  main-is:          Main.hs
+-
 -  -- other-modules:
 -  -- other-extensions:
--  build-depends:       base == 4.*, <project>
--  hs-source-dirs:      app
--  default-language:    Haskell2010
+-  build-depends:
+-      base    >=4 && <5
+-    , <project>
+-
+-  hs-source-dirs:   app
+-  default-language: Haskell2010
+-
 -  if flag(develop)
 -    ghc-options: -Wall -Werror -Wno-type-defaults
 -
 -test-suite tests
--  type:                exitcode-stdio-1.0
--  main-is:             Spec.hs
--  hs-source-dirs:      test
--  default-language:    Haskell2010
--  build-depends:       base == 4.*, <project>, QuickCheck
+-  type:             exitcode-stdio-1.0
+-  main-is:          Spec.hs
+-  hs-source-dirs:   test
+-  default-language: Haskell2010
+-  build-depends:
+-      base        >=4 && <5
+-    , <project>
+-    , QuickCheck
+-
 -  if flag(develop)
 -    ghc-options: -Wall -Werror -Wno-type-defaults
 //GO.SYSIN DD ./project.cabal
