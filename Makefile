@@ -15,7 +15,7 @@ BIN = \
 	cmnt \
 	codespell \
 	dpass \
-	filter \
+	fext \
 	getmod \
 	hi \
 	hsinit \
