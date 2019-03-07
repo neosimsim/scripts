@@ -16,6 +16,7 @@ BIN = \
 	codespell \
 	dpass \
 	fext \
+	filter \
 	getmod \
 	hi \
 	hsinit \
