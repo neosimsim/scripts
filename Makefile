@@ -2,6 +2,9 @@ PREFIX=$(HOME)
 MANPREFIX=$(PREFIX)/share/man
 
 BIN = \
+	1 \
+	2 \
+	3 \
 	a \
 	a+ \
 	a- \
