@@ -18,6 +18,7 @@ BIN = \
 	fext \
 	filter \
 	getmod \
+	git-to-dot \
 	hi \
 	hsinit \
 	keystore \
