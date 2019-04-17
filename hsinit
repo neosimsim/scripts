@@ -16,23 +16,21 @@ sed 's/.//' >./app/Main.hs <<'//GO.SYSIN DD ./app/Main.hs'
 -import           Lib
 -
 -main :: IO ()
--main = putStrLn msg
+-main = someFunc
 //GO.SYSIN DD ./app/Main.hs
 chmod 644 ./app/Main.hs
-echo ./CHANGELOG.md
-sed 's/.//' >./CHANGELOG.md <<'//GO.SYSIN DD ./CHANGELOG.md'
--# Revision history for <app>
+echo ./ChangeLog.md.template
+sed 's/.//' >./ChangeLog.md.template <<'//GO.SYSIN DD ./ChangeLog.md.template'
+-# Changelog for stack-template
 -
--## 0.1.0 -- YYYY-mm-dd
--
--* First version. Released on an unsuspecting world.
-//GO.SYSIN DD ./CHANGELOG.md
-chmod 644 ./CHANGELOG.md
+-## Unreleased changes
+//GO.SYSIN DD ./ChangeLog.md.template
+chmod 644 ./ChangeLog.md.template
 echo ./.gitignore
 sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
--dist-newstyle
--dist
--.ghc.environment.*
+-.stack-work/
+-*.cabal
+-
 //GO.SYSIN DD ./.gitignore
 chmod 644 ./.gitignore
 echo ./init
@@ -41,14 +39,20 @@ sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
 -
 -name=$(basename `pwd`)
 -name=${1:-$name}
+-year=$(year)
 -
--sed "s/<project>/$name/g" project.cabal >$name.cabal
--cabal-fmt -i $name.cabal
--sed "s/<project>/$name/g" misc/git/pre-commit.tmp >misc/git/pre-commit
+-sed "s/<project>/$name/g;s/<year>/$year/" package.yaml.template >package.yaml
+-sed "s/<project>/$name/g" misc/git/pre-commit.template >misc/git/pre-commit
+-sed "s/<project>/$name/g" README.md.template >README.md
+-sed "s/<project>/$name/g" ChangeLog.md.template >ChangeLog.md
+-sed "s/<year>/$year/" LICENSE.template >LICENSE
 -chmod +x misc/git/pre-commit
 -
--rm project.cabal
--rm misc/git/pre-commit.tmp
+-rm package.yaml.template
+-rm README.md.template
+-rm ChangeLog.md.template
+-rm misc/git/pre-commit.template
+-rm LICENSE.template
 -rm $0
 -
 -git init .
@@ -57,26 +61,26 @@ sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
 -git commit -m 'initial commit'
 //GO.SYSIN DD ./init
 chmod 755 ./init
-echo ./LICENSE
-sed 's/.//' >./LICENSE <<'//GO.SYSIN DD ./LICENSE'
+echo ./LICENSE.template
+sed 's/.//' >./LICENSE.template <<'//GO.SYSIN DD ./LICENSE.template'
 -BSD 3-Clause License
 -
--Copyright © 2018, Alexander Ben Nasrallah <me@abn.sh>
+-Copyright © <year>, Alexander Ben Nasrallah <me@abn.sh>
 -All rights reserved.
 -
 -Redistribution and use in source and binary forms, with or without
 -modification, are permitted provided that the following conditions are met:
 -
--* Redistributions of source code must retain the above copyright notice, this
--  list of conditions and the following disclaimer.
+-*	Redistributions of source code must retain the above copyright notice, this
+-	list of conditions and the following disclaimer.
 -
--* Redistributions in binary form must reproduce the above copyright notice,
--  this list of conditions and the following disclaimer in the documentation
--  and/or other materials provided with the distribution.
+-*	Redistributions in binary form must reproduce the above copyright notice,
+-	this list of conditions and the following disclaimer in the documentation
+-	and/or other materials provided with the distribution.
 -
--* Neither the name of the copyright holder nor the names of its
--  contributors may be used to endorse or promote products derived from
--  this software without specific prior written permission.
+-*	Neither the name of the copyright holder nor the names of its contributors
+-	may be used to endorse or promote products derived from this software
+-	without specific prior written permission.
 -
 -THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 -AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -89,8 +93,8 @@ sed 's/.//' >./LICENSE <<'//GO.SYSIN DD ./LICENSE'
 -OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 -OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -
-//GO.SYSIN DD ./LICENSE
-chmod 644 ./LICENSE
+//GO.SYSIN DD ./LICENSE.template
+chmod 644 ./LICENSE.template
 echo ./misc
 mkdir -p ./misc
 chmod 755 ./misc
@@ -106,8 +110,8 @@ chmod 755 ./misc
 echo ./misc/git
 mkdir -p ./misc/git
 chmod 755 ./misc/git
-echo ./misc/git/pre-commit.tmp
-sed 's/.//' >./misc/git/pre-commit.tmp <<'//GO.SYSIN DD ./misc/git/pre-commit.tmp'
+echo ./misc/git/pre-commit.template
+sed 's/.//' >./misc/git/pre-commit.template <<'//GO.SYSIN DD ./misc/git/pre-commit.template'
 -#!/bin/sh
 -#
 -# An example hook script to verify what is about to be committed.
@@ -171,96 +175,70 @@ sed 's/.//' >./misc/git/pre-commit.tmp <<'//GO.SYSIN DD ./misc/git/pre-commit.tm
 -	exit 1
 -fi
 -
--if ! cabal check
--then
--	echo "Fix the cabal project file before commit."
+-if ! (stack clean && stack build --pedantic && stack test --pedantic); then
+-	echo "Project can't be build. Please fix before committing."
 -	exit 1
 -fi
+//GO.SYSIN DD ./misc/git/pre-commit.template
+chmod 644 ./misc/git/pre-commit.template
+echo ./package.yaml.template
+sed 's/.//' >./package.yaml.template <<'//GO.SYSIN DD ./package.yaml.template'
+-name:                <project>
+-version:             0.1.0.0
+-github:              "github.com/neosimsim/<project>"
+-license:             BSD3
+-author:              "Alexander Ben Nasrallah"
+-maintainer:          "me@abn.sh"
+-copyright:           "<year> Alexander Ben Nasrallah"
 -
--if ! (cabal-fmt <project>.cabal | cmp -s - <project>.cabal)
--then
--	echo "Format the cabal file. Please run:"
--	echo "cabal-fmt -i <project>.cabal"
--	exit 1
--fi
+-extra-source-files:
+-- README.md
+-- ChangeLog.md
 -
--if ! (cabal new-clean && cabal new-build --flags=develop && cabal new-test --flag=develop); then
--	echo "Project can't be build. Please fix before."
--	exit 1
--fi
-//GO.SYSIN DD ./misc/git/pre-commit.tmp
-chmod 644 ./misc/git/pre-commit.tmp
-echo ./project.cabal
-sed 's/.//' >./project.cabal <<'//GO.SYSIN DD ./project.cabal'
--name:               <project>
--version:            0.1.0
--synopsis:           ..
--description:        ...
--homepage:           https://github.com/neosimsim/<project>
--license:            BSD3
--license-file:       LICENSE
--author:             Alexander Ben Nasrallah
--maintainer:         me@abn.sh
+-# Metadata used when publishing your package
+-# synopsis:            Short description of your package
+-# category:            Web
 -
---- copyright:
--category:           Misc
--build-type:         Simple
--extra-source-files: CHANGELOG.md
--cabal-version:      >=1.10
+-description:         Please see the README on GitHub at <https://github.com/neosimsim/<project>#readme>
 -
--source-repository head
--  type:     git
--  location: https://github.com/neosimsim/<project>
+-dependencies:
+-- base >= 4.7 && < 5
 -
--flag develop
--  description: Enable warnings and treat them as error.
--  default:     False
--  manual:      True
+-library:
+-  source-dirs: src
 -
--library
--  exposed-modules:  Lib
+-executables:
+-  <project>:
+-    main:                Main.hs
+-    source-dirs:         app
+-    ghc-options:
+-    - -threaded
+-    - -rtsopts
+-    - -with-rtsopts=-N
+-    dependencies:
+-    - <project>
 -
--  -- other-modules:
--  -- other-extensions:
--  build-depends:    base ==4.*
--  hs-source-dirs:   src
--  default-language: Haskell2010
--
--  if flag(develop)
--    ghc-options: -Wall -Werror -Wno-type-defaults
--
--executable <project>
--  main-is:          Main.hs
--
--  -- other-modules:
--  -- other-extensions:
--  build-depends:
--      base    >=4 && <5
--    , <project>
--
--  hs-source-dirs:   app
--  default-language: Haskell2010
--
--  if flag(develop)
--    ghc-options: -Wall -Werror -Wno-type-defaults
--
--test-suite tests
--  type:             exitcode-stdio-1.0
--  main-is:          Spec.hs
--  hs-source-dirs:   test
--  default-language: Haskell2010
--  build-depends:
--      base        >=4 && <5
--    , <project>
--    , QuickCheck
--
--  if flag(develop)
--    ghc-options: -Wall -Werror -Wno-type-defaults
-//GO.SYSIN DD ./project.cabal
-chmod 644 ./project.cabal
+-tests:
+-  test:
+-    main:                Spec.hs
+-    source-dirs:         test
+-    ghc-options:
+-    - -threaded
+-    - -rtsopts
+-    - -with-rtsopts=-N
+-    dependencies:
+-    - <project>
+//GO.SYSIN DD ./package.yaml.template
+chmod 644 ./package.yaml.template
+echo ./README.md.template
+sed 's/.//' >./README.md.template <<'//GO.SYSIN DD ./README.md.template'
+-# <project>
+//GO.SYSIN DD ./README.md.template
+chmod 644 ./README.md.template
 echo ./Setup.hs
 sed 's/.//' >./Setup.hs <<'//GO.SYSIN DD ./Setup.hs'
--import Distribution.Simple
+-import           Distribution.Simple
+-
 -main = defaultMain
 //GO.SYSIN DD ./Setup.hs
 chmod 644 ./Setup.hs
@@ -272,16 +250,19 @@ mkdir -p ./src
 chmod 755 ./src
 echo ./src/Lib.hs
 sed 's/.//' >./src/Lib.hs <<'//GO.SYSIN DD ./src/Lib.hs'
---- | Template library
 -module Lib
--  ( msg
+-  ( someFunc
 -  ) where
 -
---- | A message string
--msg :: String
--msg = "Hello Haskell!"
+-someFunc :: IO ()
+-someFunc = putStrLn "someFunc"
 //GO.SYSIN DD ./src/Lib.hs
 chmod 644 ./src/Lib.hs
+echo ./stack.yaml
+sed 's/.//' >./stack.yaml <<'//GO.SYSIN DD ./stack.yaml'
+-resolver: lts-13.17
+//GO.SYSIN DD ./stack.yaml
+chmod 644 ./stack.yaml
 echo ./test
 mkdir -p ./test
 chmod 755 ./test
@@ -290,21 +271,7 @@ mkdir -p ./test
 chmod 755 ./test
 echo ./test/Spec.hs
 sed 's/.//' >./test/Spec.hs <<'//GO.SYSIN DD ./test/Spec.hs'
--module Main
--  ( main
--  ) where
--
--import           Control.Monad
--import           System.Exit
--import           Test.QuickCheck
--
--prop_true :: a -> Bool
--prop_true _ = True
--
 -main :: IO ()
--main = do
--  putStrLn "Hello, Haskell!"
--  result <- quickCheckResult (prop_true :: Integer -> Bool)
--  unless (isSuccess result) exitFailure
+-main = putStrLn "Test suite not yet implemented"
 //GO.SYSIN DD ./test/Spec.hs
 chmod 644 ./test/Spec.hs
