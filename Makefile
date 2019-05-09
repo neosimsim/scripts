@@ -33,6 +33,7 @@ BIN = \
 	quote \
 	remtrail \
 	splitcammel \
+	tex2text \
 	tmux-run-selection-with \
 	tmux-select-word \
 	ucmnt \

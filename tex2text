@@ -1,0 +1,73 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-13.17 script --ghc-options -Wall --ghc-options -Werror
+--
+-- to test run:  echo "\lambda(x.x) \Rightarrow \lambda{}-calc" | ./tex2text # = λ(x.x) ⇒ λ-calc
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+
+import           Data.Either.Combinators
+import qualified Data.Map                as M
+import           Data.Text               hiding (map)
+import           Data.Text.IO
+import           Protolude               hiding (concat, putStr, putStrLn)
+import           Text.Megaparsec         as P
+import           Text.Megaparsec.Char
+
+mapping :: [(Text, Text)]
+mapping =
+  [ ("lambda", "λ")
+  , ("Rightarrow", "⇒")
+  , ("rightarrow", "")
+  , ("N", "ℕ")
+  , ("R", "ℝ")
+  , ("rightarrow", "→")
+  ]
+
+data Fragment
+  = Plain Text
+  | Escaped Text
+  deriving (Show)
+
+type Partition = [Fragment]
+
+resolve :: [(Text, Text)] -> Fragment -> Text
+resolve _ (Plain t) = t
+resolve m (Escaped e) =
+  case M.lookup e $ M.fromList m of
+    Just t  -> t
+    Nothing -> concat ["\\", e]
+
+type Parser = Parsec Void Text
+
+pPlain :: Parser Fragment
+pPlain =
+  Plain . pack <$>
+  manyTill anySingle ((lookAhead $ char '\\' >> return ()) <|> eof)
+
+pEscaped :: Parser Fragment
+pEscaped = do
+  fragment <- Escaped . pack <$> (char '\\' >> P.many alphaNumChar)
+  -- an optional {} allows an escaped term to be followed by plain text
+  -- without any whitespace in between.
+  _ <- P.observing $ string "{}"
+  return fragment
+
+pFragment :: Parser Fragment
+pFragment = pEscaped <|> pPlain
+
+pPartition :: Parser Partition
+pPartition = do
+  end <- atEnd
+  if end
+    then return []
+    else (:) <$> pFragment <*> pPartition
+
+parsePartition :: Text -> Either Text Partition
+parsePartition = mapLeft (pack . errorBundlePretty) . P.parse pPartition ""
+
+main :: IO ()
+main = do
+  stdIn <- getContents
+  case parsePartition stdIn of
+    Left e     -> putStrLn e
+    Right part -> putStr . concat $ map (resolve mapping) part
