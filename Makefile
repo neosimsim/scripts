@@ -44,11 +44,11 @@ BIN = \
 
 # MAN = $(BIN:=.1)
 
-install:
+install: phony
 	mkdir -p $(PREFIX)/bin
 	cp -f $(BIN) $(PREFIX)/bin
 
-uninstall:
+uninstall: phony
 	cd $(PREFIX)/bin && rm -f $(BIN)
 
 TESTS=\
@@ -56,7 +56,7 @@ TESTS=\
 
 tests: $(TESTS)
 
-$(TESTS):
+$(TESTS): phony
 	sh $@
 
-.PHONY: install uninstall $(TESTS)
+phony:
