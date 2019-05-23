@@ -51,4 +51,12 @@ install:
 uninstall:
 	cd $(PREFIX)/bin && rm -f $(BIN)
 
-.PHONY: install uninstall
+TESTS=\
+	tex2text_test
+
+tests: $(TESTS)
+
+$(TESTS):
+	sh $@
+
+.PHONY: install uninstall $(TESTS)
