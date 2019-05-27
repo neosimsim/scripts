@@ -1,3 +1,0 @@
-#!/bin/sh
-
-./tex2text < tex2text_test_in | diff - tex2text_test_out
