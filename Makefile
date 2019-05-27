@@ -32,6 +32,7 @@ BIN = \
 	pick \
 	quote \
 	remtrail \
+	rotatekb \
 	splitcammel \
 	tmux-run-selection-with \
 	tmux-select-word \
