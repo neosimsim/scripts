@@ -10,9 +10,11 @@ import           Data.Either.Combinators
 import qualified Data.Map                as M
 import           Data.Text               hiding (map)
 import           Data.Text.IO
+import           Data.Text.Encoding
 import           Protolude               hiding (concat, putStr, putStrLn)
 import           Text.Megaparsec         as P
 import           Text.Megaparsec.Char
+import qualified Data.ByteString as B
 
 mapping :: [(Text, Text)]
 mapping
@@ -207,4 +209,4 @@ main = do
   stdIn <- getContents
   case parsePartition stdIn of
     Left e     -> putStrLn e
-    Right part -> putStr . concat $ map (resolve mapping) part
+    Right part -> B.putStr . encodeUtf8 . concat $ map (resolve mapping) part
