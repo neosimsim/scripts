@@ -53,11 +53,12 @@ uninstall: phony
 	cd $(PREFIX)/bin && rm -f $(BIN)
 
 TESTS=\
-	tex2text_test
+	  test_uni
 
-tests: $(TESTS)
+test: $(TESTS)
 
-$(TESTS): phony
-	sh $@
+test_uni: phony
+	./uni < uni_test_in | diff - uni_test_out
+
 
 phony:
