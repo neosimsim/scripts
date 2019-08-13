@@ -185,11 +185,13 @@ echo ./package.yaml.template
 sed 's/.//' >./package.yaml.template <<'//GO.SYSIN DD ./package.yaml.template'
 -name:                <project>
 -version:             0.1.0.0
--github:              "github.com/neosimsim/<project>"
+-homepage:            "https://gitlab.com/neosimsim/<project>"
+-git:                 "https://gitlab.com/neosimsim/<project>.git"
+-bug-reports:         "https://gitlab.com/neosimsim/<project>/issues"
 -license:             BSD3
 -author:              "Alexander Ben Nasrallah"
 -maintainer:          "me@abn.sh"
--copyright:           "<year> Alexander Ben Nasrallah"
+-copyright:           "<year> © Alexander Ben Nasrallah"
 -
 -extra-source-files:
 -- README.md
@@ -199,7 +201,7 @@ sed 's/.//' >./package.yaml.template <<'//GO.SYSIN DD ./package.yaml.template'
 -# synopsis:            Short description of your package
 -# category:            Web
 -
--description:         Please see the README on GitHub at <https://github.com/neosimsim/<project>#readme>
+-description:         Please see the README on GitLab at <https://gitlab.com/neosimsim/<project>#readme>
 -
 -dependencies:
 -- base >= 4.7 && < 5
