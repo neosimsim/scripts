@@ -8,6 +8,7 @@ BIN = \
 	a \
 	a+ \
 	a- \
+	agda \
 	agofmt \
 	Ahfmt \
 	bat \
