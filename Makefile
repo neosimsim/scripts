@@ -18,6 +18,7 @@ BIN = \
 	dpass \
 	fext \
 	filter \
+	g \
 	getmod \
 	git-to-dot \
 	hi \
