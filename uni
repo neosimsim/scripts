@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver lts-13.17 script --package protolude --package text --package containers --package either --package bytestring --package megaparsec --ghc-options -Wall --ghc-options -Werror
+-- stack --resolver lts-14.6 script --package protolude --package text --package containers --package either --package bytestring --package megaparsec --ghc-options -Wall --ghc-options -Werror
 --
 -- to test run:  echo "\lambda(x.x) \Rightarrow \lambda{}-calc" | ./tex2text # = λ(x.x) ⇒ λ-calc
 {-# LANGUAGE NoImplicitPrelude #-}
