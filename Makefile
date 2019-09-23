@@ -61,6 +61,8 @@ test: $(TESTS)
 
 test_uni: phony
 	./uni < uni_test_in | diff - uni_test_out
+	@echo test broken pipes
+	./uni < uni_test_in | sed 2q >/dev/null
 
 
 phony:
