@@ -19,6 +19,7 @@ BIN = \
 	fext \
 	filter \
 	g \
+	games \
 	getmod \
 	git-to-dot \
 	hi \
