@@ -8,6 +8,7 @@ etmp=`{mktemp /tmp/Ahfmt.XXXXXX}
 if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
        # If the file is formatted already `hfmt` doesn't print anything
        if (cmp /dev/null $ftmp >/dev/null >[2=1]) {
+               rm $ftmp $etmp
                exit 0
        }
        # Don't dirty the window if you don't have to
@@ -24,8 +25,10 @@ if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
        }
        # get suggestions
        hfmt $ftmp | sed 's|^'$ftmp'|'^$%^'|'
+       rm $ftmp $etmp
        exit 0
 }
 if not {
        sed 's|^/dev/stdin|'^$%^'|' $etmp >[1=2]
 }
+rm $ftmp $etmp
