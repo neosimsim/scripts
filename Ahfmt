@@ -11,7 +11,7 @@ if (aread body | hfmt -s - >$ftmp >[2]$etmp) {
                exit 0
        }
        # Don't dirty the window if you don't have to
-       if (! aread body | cmp /dev/stdin $ftmp >/dev/null >[2=1]) {
+       if (! aread body | diff /dev/stdin $ftmp >/dev/null >[2=1]) {
                echo -n mark | awrite ctl
                echo -n nomark | awrite ctl
                echo -n , | awrite addr
