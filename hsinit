@@ -28,31 +28,93 @@ sed 's/.//' >./ChangeLog.md.template <<'//GO.SYSIN DD ./ChangeLog.md.template'
 chmod 644 ./ChangeLog.md.template
 echo ./.gitignore
 sed 's/.//' >./.gitignore <<'//GO.SYSIN DD ./.gitignore'
+-*.lock
 -.stack-work/
--*.cabal
--
+-dist-newstyle/
+-dist/
 //GO.SYSIN DD ./.gitignore
 chmod 644 ./.gitignore
+echo ./.gitlab-ci.yml.template
+sed 's/.//' >./.gitlab-ci.yml.template <<'//GO.SYSIN DD ./.gitlab-ci.yml.template'
+-stages:
+-- build
+-
+-variables:
+-  STACK_ROOT: "$CI_PROJECT_DIR/.cache/stack"
+-
+-.stack: &stack_build
+-  stage: build
+-  script:
+-  - stack --stack-yaml stack-build.yaml exec --package cabal-fmt -- cabal-fmt <project>.cabal | diff <project>.cabal -
+-  - stack --stack-yaml stack-build.yaml exec --package hfmt -- hfmt
+-  - stack build --pedantic
+-  - stack test --pedantic
+-  cache:
+-    key: "$CI_JOB_NAME"
+-    paths:
+-    - .cache/stack
+-
+-stack-latest:
+-  <<: *stack_build
+-  image: fpco/stack-build-small:lts
+-  allow_failure: true
+-  script:
+-  - stack --stack-yaml stack-build.yaml exec --package cabal-fmt cabal-fmt <project>.cabal | diff <project>.cabal -
+-  - stack --stack-yaml stack-build.yaml exec --package hfmt hfmt
+-  - stack --resolver lts build --pedantic
+-  - stack --resolver lts test --pedantic
+-
+-stack-14.6:
+-  <<: *stack_build
+-  image: fpco/stack-build-small:lts-14.6
+-  variables:
+-    STACK_YAML: stack-lts-14.6.yaml
+-
+-.cabal: &cabal_job
+-  stage: build
+-  script:
+-  - cabal v2-update
+-  - cabal v2-build
+-  - cabal v2-test test
+-
+-cabal-latest:
+-  <<: *cabal_job
+-  image: haskell:latest
+-  allow_failure: true
+-
+-cabal-8.8.1:
+-  <<: *cabal_job
+-  image: haskell:8.8.1
+-
+-cabal-8.6.5:
+-  <<: *cabal_job
+-  image: haskell:8.6.5
+//GO.SYSIN DD ./.gitlab-ci.yml.template
+chmod 644 ./.gitlab-ci.yml.template
 echo ./init
 sed 's/.//' >./init <<'//GO.SYSIN DD ./init'
--#!/bin/sh
+-#!/bin/sh -e
 -
--name=$(basename `pwd`)
--name=${1:-$name}
--year=$(year)
+-dirname=$(basename `pwd`)
+-name=${1:-$dirname}
+-year=$(date +%Y)
 -
--sed "s/<project>/$name/g;s/<year>/$year/" package.yaml.template >package.yaml
+-sed "s/<project>/$name/g;s/<year>/$year/" package.cabal.template >$name.cabal
+-stack --stack-yaml stack-build.yaml exec -- cabal-fmt -i $name.cabal
 -sed "s/<project>/$name/g" misc/git/pre-commit.template >misc/git/pre-commit
 -sed "s/<project>/$name/g" README.md.template >README.md
 -sed "s/<project>/$name/g" ChangeLog.md.template >ChangeLog.md
 -sed "s/<year>/$year/" LICENSE.template >LICENSE
+-sed "s/<project>/$name/g" .gitlab-ci.yml.template >.gitlab-ci.yml
 -chmod +x misc/git/pre-commit
+-ln -s stack-lts-14.6.yaml stack.yaml
 -
--rm package.yaml.template
+-rm package.cabal.template
 -rm README.md.template
 -rm ChangeLog.md.template
 -rm misc/git/pre-commit.template
 -rm LICENSE.template
+-rm .gitlab-ci.yml.template
 -rm $0
 -
 -git init .
@@ -165,7 +227,14 @@ sed 's/.//' >./misc/git/pre-commit.template <<'//GO.SYSIN DD ./misc/git/pre-comm
 -	exit 1
 -fi
 -
--unformatted=$(hfmt -l)
+-if ! (stack --stack-yaml stack-build.yaml exec --package cabal-fmt -- cabal-fmt <project>.cabal | diff <project>.cabal - >/dev/null )
+-then
+-	echo "Cabal file must be formatted with cabal-fmt. Please run:"
+-	echo "cabal-fmt -i <project>.cabal"
+-	exit 1
+-fi
+-
+-unformatted=$(stack --stack-yaml stack-build.yaml exec --package hfmt -- hfmt -l)
 -if [ -n "$unformatted" ]
 -then
 -	echo "Haskell files must be formatted with hfmt. Please run:"
@@ -181,57 +250,69 @@ sed 's/.//' >./misc/git/pre-commit.template <<'//GO.SYSIN DD ./misc/git/pre-comm
 -fi
 //GO.SYSIN DD ./misc/git/pre-commit.template
 chmod 644 ./misc/git/pre-commit.template
-echo ./package.yaml.template
-sed 's/.//' >./package.yaml.template <<'//GO.SYSIN DD ./package.yaml.template'
--name:                <project>
--version:             0.1.0.0
--homepage:            "https://gitlab.com/neosimsim/<project>"
--git:                 "https://gitlab.com/neosimsim/<project>.git"
--bug-reports:         "https://gitlab.com/neosimsim/<project>/issues"
--license:             BSD3
--author:              "Alexander Ben Nasrallah"
--maintainer:          "me@abn.sh"
--copyright:           "<year> © Alexander Ben Nasrallah"
+echo ./package.cabal.template
+sed 's/.//' >./package.cabal.template <<'//GO.SYSIN DD ./package.cabal.template'
+-cabal-version:      1.12
+-name:               <project>
+-version:            0.0.0.0
+-synopsis:           Template Synopsis. Should be edited before release.
+-description:
+-  Please see the README on GitHub at <https://gitlab.com/neosimsim/<project>#readme>
 -
+-category:           cli-tool
+-homepage:           https://gitlab.com/neosimsim/<project>
+-bug-reports:        https://gitlab.com/neosimsim/<project>/issues
+-author:             Alexander Ben Nasrallah
+-maintainer:         me@abn.sh
+-copyright:          <year> © Alexander Ben Nasrallah
+-license:            BSD3
+-license-file:       LICENSE
+-build-type:         Simple
 -extra-source-files:
--- README.md
--- ChangeLog.md
+-  README.md
+-  ChangeLog.md
 -
--# Metadata used when publishing your package
--# synopsis:            Short description of your package
--# category:            Web
+-source-repository head
+-  type:     git
+-  location: https://gitlab.com/neosimsim/<project>.git
 -
--description:         Please see the README on GitLab at <https://gitlab.com/neosimsim/<project>#readme>
+-flag static
+-  description: Statically link the application
+-  manual:      True
+-  default:     False
 -
--dependencies:
--- base >= 4.7 && < 5
+-library
+-  exposed-modules: Lib
+-  hs-source-dirs:  src
+-  build-depends:
+-      base              >=4.7 && <5
 -
--library:
--  source-dirs: src
+-  default-language: Haskell2010
 -
--executables:
--  <project>:
--    main:                Main.hs
--    source-dirs:         app
--    ghc-options:
--    - -threaded
--    - -rtsopts
--    - -with-rtsopts=-N
--    dependencies:
--    - <project>
+-executable <project>
+-  main-is:          Main.hs
+-  hs-source-dirs:   app
+-  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+-  build-depends:
+-      base                  >=4.7 && <5
+-    , <project>
 -
--tests:
--  test:
--    main:                Spec.hs
--    source-dirs:         test
--    ghc-options:
--    - -threaded
--    - -rtsopts
--    - -with-rtsopts=-N
--    dependencies:
--    - <project>
-//GO.SYSIN DD ./package.yaml.template
-chmod 644 ./package.yaml.template
+-  if flag(static)
+-    ld-options: -static -pthread
+-
+-  default-language: Haskell2010
+-
+-test-suite test
+-  type:             exitcode-stdio-1.0
+-  main-is:          Spec.hs
+-  hs-source-dirs:   test
+-  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+-  build-depends:
+-      base              >=4.7 && <5
+-
+-  default-language: Haskell2010
+//GO.SYSIN DD ./package.cabal.template
+chmod 644 ./package.cabal.template
 echo ./README.md.template
 sed 's/.//' >./README.md.template <<'//GO.SYSIN DD ./README.md.template'
 -# <project>
@@ -260,11 +341,23 @@ sed 's/.//' >./src/Lib.hs <<'//GO.SYSIN DD ./src/Lib.hs'
 -someFunc = putStrLn "someFunc"
 //GO.SYSIN DD ./src/Lib.hs
 chmod 644 ./src/Lib.hs
-echo ./stack.yaml
-sed 's/.//' >./stack.yaml <<'//GO.SYSIN DD ./stack.yaml'
--resolver: lts-13.17
-//GO.SYSIN DD ./stack.yaml
-chmod 644 ./stack.yaml
+echo ./stack-build.yaml
+sed 's/.//' >./stack-build.yaml <<'//GO.SYSIN DD ./stack-build.yaml'
+-resolver: lts-14.6
+-
+-extra-deps:
+-# needed by hfmt
+-- hindent-5.3.1@sha256:23dc3d423820a1de4a11f54eb87992f2c9fa1b686b2230bb06d1af46edc85c4b,3452
+-- stylish-haskell-0.9.2.2@sha256:7852ea649b83f899888fdc2559d25495d0959d832cb9ca9da53bae78df66dc0e,4581
+-# needed by cabal-fmt
+-- Cabal-3.0.0.0@sha256:1ba37b8d80e89213b17db7b8b9ea0108da55ca65f8c0cbb7433881a284c5cf67,26027
+//GO.SYSIN DD ./stack-build.yaml
+chmod 644 ./stack-build.yaml
+echo ./stack-lts-14.6.yaml
+sed 's/.//' >./stack-lts-14.6.yaml <<'//GO.SYSIN DD ./stack-lts-14.6.yaml'
+-resolver: lts-14.6
+//GO.SYSIN DD ./stack-lts-14.6.yaml
+chmod 644 ./stack-lts-14.6.yaml
 echo ./test
 mkdir -p ./test
 chmod 755 ./test
