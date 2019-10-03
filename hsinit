@@ -316,6 +316,8 @@ chmod 644 ./package.cabal.template
 echo ./README.md.template
 sed 's/.//' >./README.md.template <<'//GO.SYSIN DD ./README.md.template'
 -# <project>
+-
+-[![pipeline status](https://gitlab.com/neosimsim/<project>/badges/master/pipeline.svg)](https://gitlab.com/neosimsim/<project>/commits/master)
 //GO.SYSIN DD ./README.md.template
 chmod 644 ./README.md.template
 echo ./Setup.hs
