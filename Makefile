@@ -39,6 +39,7 @@ BIN = \
 	splitcammel \
 	tmux-run-selection-with \
 	tmux-select-word \
+	tmux-ws \
 	ucmnt \
 	uni \
 	upper \
