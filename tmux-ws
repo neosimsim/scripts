@@ -27,18 +27,20 @@ then
 	usage
 fi
 
+cd "$projectdir"
+
 projectname="`basename $projectdir`"
 
 if ! tmux has-session -t "$projectname" >/dev/null 2>&1
 then 
-	tmux new-session -d -s "$projectname" -c "`pwd`/$projectdir"
+	tmux new-session -d -s "$projectname"
 	tmux split-window -l 10  -t "$projectname":1
 	tmux select-pane -t "$projectname":1.1
 fi
 
 if [ -z "$TMUX" ]
 then
-	tmux attach -t "$projectname"
+	exec tmux attach -t "$projectname"
 else
-	tmux switch-client -t "$projectname"
+	exec tmux switch-client -t "$projectname"
 fi
