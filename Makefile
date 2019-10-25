@@ -9,6 +9,7 @@ BIN = \
 	a+ \
 	a- \
 	agda \
+	agda2 \
 	agofmt \
 	Ahfmt \
 	bat \
