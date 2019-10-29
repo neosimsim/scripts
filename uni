@@ -163,6 +163,13 @@ mapping
   , ("Chi", "Χ")
   , ("Psi", "Ψ")
   , ("Omega", "Ω")
+  -- smiley
+  , (":)", "☺")
+  , ("XD", "😁")
+  , (";)", "😉")
+  -- misc
+  , (",", " ") -- Narrow No-Break Space
+  , ("~", " ") -- No-Break Space
   ]
 
 data Fragment
