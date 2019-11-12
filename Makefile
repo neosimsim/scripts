@@ -22,6 +22,7 @@ BIN = \
 	g \
 	games \
 	getmod \
+	git-files \
 	git-to-dot \
 	hi \
 	hsinit \
