@@ -170,6 +170,9 @@ mapping
   -- misc
   , (",", " ") -- Narrow No-Break Space
   , ("~", " ") -- No-Break Space
+  , ("'", "́") -- Combining Acute Accent, e. g. é
+  , ("^", "̂") -- Combining Circumflex Accent, e. g. ê
+  , ("`", "̀") -- Combining Grave Accent, e. g. è
   ]
 
 data Fragment
