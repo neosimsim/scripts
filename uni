@@ -1,9 +1,10 @@
-#!/usr/bin/env stack
+#!/usr/bin/env nix-shell
+#!nix-shell --pure -i runghc -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [protolude text containers either bytestring megaparsec] )"
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 -- stack --resolver lts-14.6 script --package protolude --package text --package containers --package either --package bytestring --package megaparsec --ghc-options -Wall --ghc-options -Werror
 --
 -- to test run:  echo "\lambda(x.x) \Rightarrow \lambda{}-calc" | ./tex2text # = λ(x.x) ⇒ λ-calc
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 import           Control.Monad
 import           Data.Either.Combinators
@@ -173,6 +174,8 @@ mapping
   , ("'", "́") -- Combining Acute Accent, e. g. é
   , ("^", "̂") -- Combining Circumflex Accent, e. g. ê
   , ("`", "̀") -- Combining Grave Accent, e. g. è
+  , ("--", "–")
+  , ("---", "—")
   ]
 
 data Fragment
