@@ -9,6 +9,7 @@ BIN = \
 	a+ \
 	a- \
 	agda \
+	agda-mode \
 	agda2 \
 	agofmt \
 	Ahfmt \
