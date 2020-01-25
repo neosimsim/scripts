@@ -120,6 +120,8 @@ mapping
   , ("::", "∷")
   , (":=", "≔")
   , ("=?", "≟")
+  , ("{{", "⦃")
+  , ("}}", "⦄")
     -- Greek alphabet…
   , ("alpha", "α")
   , ("beta", "β")
@@ -209,7 +211,7 @@ pEscaped = do
     (char '\\' >>
      P.manyTill
        anySingle
-       (lookAhead (void (char '{')) <|> lookAhead (void (char '\\')) <|>
+       (lookAhead (void (string "{}")) <|> lookAhead (void (char '\\')) <|>
         lookAhead (void spaceChar) <|>
         eof))
   -- an optional {} allows an escaped term to be followed by plain text
