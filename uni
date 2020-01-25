@@ -11,15 +11,16 @@
 -- -- stack --resolver lts-14.6 script --package protolude --package text --package containers --package either --package bytestring --package megaparsec
 --
 import           Control.Monad
+import qualified Data.ByteString         as B
 import           Data.Either.Combinators
 import qualified Data.Map                as M
 import           Data.Text               hiding (map)
-import           Data.Text.IO
 import           Data.Text.Encoding
+import           Data.Text.IO            (hGetContents, putStrLn)
 import           Protolude               hiding (concat, putStr, putStrLn)
+import           System.IO               (hSetEncoding, stdin, utf8)
 import           Text.Megaparsec         as P
 import           Text.Megaparsec.Char
-import qualified Data.ByteString as B
 
 mapping :: [(Text, Text)]
 mapping
@@ -230,7 +231,8 @@ parsePartition = mapLeft (pack . errorBundlePretty) . P.parse pPartition ""
 
 main :: IO ()
 main = do
-  stdIn <- getContents
-  case parsePartition stdIn of
+  hSetEncoding stdin utf8
+  input <- hGetContents stdin
+  case parsePartition input of
     Left e     -> putStrLn e
     Right part -> B.putStr . encodeUtf8 . concat $ map (resolve mapping) part
