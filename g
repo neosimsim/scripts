@@ -7,7 +7,7 @@ g -l
 g -h
 
 Runs the given command with the given GHC version set as prefix of PATH.
-Expects ghc to be installed in $OPT/ghc-$GHCVERSION.
+Expects ghc to be installed in $APPLICATIONS/ghc-$GHCVERSION.
 
 -v GHCVERSION	specify the GHC version (default: 8.6.5)
 -l		list installed ghc versions
@@ -31,13 +31,13 @@ shift $(($OPTIND -1))
 
 if [ -n "$list" ]
 then
-	ls -1 "$OPT" | grep -E '^ghc-'
+	ls -1 "$APPLICATIONS" | grep -E '^ghc-'
 	exit 0
 fi
 
 printf 'running `%s` within ghc-%s\n' "$*" "$version"
 
-ghcpath="$OPT/ghc-$version"
+ghcpath="$APPLICATIONS/ghc-$version"
 
 if ! [ -d "$ghcpath" ]
 then
