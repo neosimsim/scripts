@@ -19,4 +19,4 @@ then
 	printf '%s not present' "$ghcpath"
 fi
 
-eval PATH="$ghcpath/bin:$PATH" "$@"
+env PATH="$ghcpath/bin:$PATH" "$@"
