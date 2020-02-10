@@ -1,4 +1,3 @@
-#!/usr/bin/env runghc
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 import           Data.Function   ((&))

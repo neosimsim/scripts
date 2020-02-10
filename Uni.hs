@@ -1,27 +1,21 @@
-#!/usr/bin/env nix-shell
-#!nix-shell --pure -i runghc -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [protolude text containers either bytestring megaparsec] )"
 {-# OPTIONS_GHC -Wall -Werror #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- to test run:  echo "\lambda(x.x) \Rightarrow \lambda{}-calc" | ./tex2text # = λ(x.x) ⇒ λ-calc
---
--- You can run this scripts a stack wrapper too:
--- #!/usr/bin/env stack
--- -- stack --resolver lts-14.6 script --package protolude --package text --package containers --package either --package bytestring --package megaparsec
---
-import           Control.Monad
+import           Control.Monad           as Monad
 import qualified Data.ByteString         as B
 import           Data.Either.Combinators
 import qualified Data.Map                as M
-import           Data.Text              (Text)
-import qualified         Data.Text                as Text
+import           Data.Maybe              (fromMaybe)
+import           Data.Text               (Text)
+import qualified Data.Text               as Text
 import           Data.Text.Encoding
-import qualified Data.Text.IO           as Text (putStrLn)
-import           System.IO               (hSetEncoding, stdin, utf8, hGetContents)
+import qualified Data.Text.IO            as Text (putStrLn)
+import           Data.Void               (Void)
+import           System.IO               (hGetContents, hSetEncoding, stdin,
+                                          utf8)
 import           Text.Megaparsec         as P
-import           Text.Megaparsec.Char as P
-import Data.Maybe (fromMaybe)
-import Data.Void (Void)
+import           Text.Megaparsec.Char    as P
 
 mapping :: [(Text, Text)]
 mapping
@@ -197,13 +191,15 @@ type Partition = [Fragment]
 
 resolve :: [(Text, Text)] -> Fragment -> Text
 resolve _ (Plain t) = t
-resolve m (Escaped e) = fromMaybe ("\\" `Text.append` e) (M.lookup e $ M.fromList m)
+resolve m (Escaped e) =
+  fromMaybe ("\\" `Text.append` e) (M.lookup e $ M.fromList m)
 
 type Parser = Parsec Void String
 
 pPlain :: Parser Fragment
 pPlain =
-  Plain . Text.pack <$> manyTill anySingle (lookAhead (void (char '\\')) <|> eof)
+  Plain . Text.pack <$>
+  manyTill anySingle (lookAhead (void (char '\\')) <|> eof)
 
 pEscaped :: Parser Fragment
 pEscaped = do
@@ -239,5 +235,6 @@ main = do
   hSetEncoding stdin utf8
   input <- hGetContents stdin
   case parsePartition input of
-    Left e     -> Text.putStrLn e
-    Right part -> B.putStr . encodeUtf8 . Text.concat $ map (resolve mapping) part
+    Left e -> Text.putStrLn e
+    Right part ->
+      B.putStr . encodeUtf8 . Text.concat $ map (resolve mapping) part

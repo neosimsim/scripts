@@ -1,7 +1,7 @@
 PREFIX=$(HOME)
 MANPREFIX=$(PREFIX)/share/man
 
-BIN = \
+POSIX_BIN = \
 	1 \
 	2 \
 	3 \
@@ -23,7 +23,6 @@ BIN = \
 	g \
 	games \
 	getmod \
-	git-files \
 	git-to-dot \
 	hi \
 	hsinit \
@@ -44,17 +43,31 @@ BIN = \
 	tmux-select-word \
 	tmux-ws \
 	ucmnt \
-	uni \
 	upper \
 	xname \
 	year \
 	zap \
 
+HASKELL_BIN = \
+	uni \
+	git-files \
+
+BIN = \
+	$(POSIX_BIN) \
+	$(HASKELL_BIN) \
+
 # MAN = $(BIN:=.1)
 
-install: phony
+install: install-posix install-haskell
+
+install-posix: phony
+	@echo install posix compatible scripts
 	mkdir -p $(PREFIX)/bin
-	cp -f $(BIN) $(PREFIX)/bin
+	cp -f $(POSIX_BIN) $(PREFIX)/bin
+
+install-haskell: phony
+	@echo install Haskell scripts
+	cabal v2-install --installdir $(PREFIX)/bin --install-method copy
 
 uninstall: phony
 	cd $(PREFIX)/bin && rm -f $(BIN)
@@ -65,9 +78,8 @@ TESTS=\
 test: $(TESTS)
 
 test_uni: phony
-	./uni < uni_test_in | diff - uni_test_out
+	cabal run -v0 exe:uni < uni_test_in | diff - uni_test_out
 	@echo test broken pipes
-	./uni < uni_test_in | sed 2q >/dev/null
-
+	cabal run -v0 exe:uni < uni_test_in | sed 2q >/dev/null
 
 phony:
