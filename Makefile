@@ -82,4 +82,12 @@ test_uni: phony
 	@echo test broken pipes
 	cabal run -v0 exe:uni < uni_test_in | sed 2q >/dev/null
 
+verify:
+	cabal-fmt scripts.cabal | diff scripts.cabal -
+	find . -name '*.hs' | xargs hfmt
+
+verify-apply:
+	cabal-fmt -i scripts.cabal
+	find . -name '*.hs' | xargs hfmt -w
+
 phony:

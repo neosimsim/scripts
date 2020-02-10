@@ -4,19 +4,11 @@ import           Data.Function   ((&))
 import           System.FilePath (FilePath)
 
 data FileModification
-  = Added
-      { filePath :: FilePath
-      }
-  | Modified
-      { filePath :: FilePath
-      }
-  | Renamed
-      { oldPath  :: FilePath
-      , filePath :: FilePath
-      }
-  | Deleted
-      { filePath :: FilePath
-      }
+  = Added { filePath :: FilePath }
+  | Modified { filePath :: FilePath }
+  | Renamed { oldPath  :: FilePath
+            , filePath :: FilePath }
+  | Deleted { filePath :: FilePath }
   deriving (Show, Eq)
 
 readModification :: String -> FileModification
@@ -42,16 +34,16 @@ foo = foldr addModification []
 addModification :: FileModification -> [FileModification] -> [FileModification]
 addModification x@(Added fp) xs =
   case span ((/= fp) . filePath) xs of
-    (_, [])              -> x : xs
-    (ys, (Deleted _):zs) -> Modified fp : ys ++ zs
-    (_, _:_)             -> error "file has been modified before added"
+    (_, [])            -> x : xs
+    (ys, Deleted _:zs) -> Modified fp : ys ++ zs
+    (_, _:_)           -> error "file has been modified before added"
 addModification x@(Deleted fp) xs =
   case span ((/= fp) . filePath) xs of
-    (_, [])                    -> x : xs
-    (ys, (Added _):zs)         -> ys ++ zs
-    (ys, (Renamed oPath _):zs) -> Deleted oPath : ys ++ zs
-    (ys, (Modified _):zs)      -> x : ys ++ zs
-    (_, (Deleted _):_)         -> error "file has beed delted twice"
+    (_, [])                  -> x : xs
+    (ys, Added _:zs)         -> ys ++ zs
+    (ys, Renamed oPath _:zs) -> Deleted oPath : ys ++ zs
+    (ys, Modified _:zs)      -> x : ys ++ zs
+    (_, Deleted _:_)         -> error "file has beed delted twice"
 addModification x@(Renamed oPath newPath) xs =
   case span ((/= newPath) . filePath) xs of
     (_, []) ->
@@ -64,10 +56,10 @@ addModification x@(Renamed oPath newPath) xs =
         (_, Renamed veryOldPath _:_) -> Renamed veryOldPath newPath : xs
         (_, Modified _:_) -> x : xs
     -- match on new name
-    (ys, (Deleted _):zs) -> Modified newPath : Deleted oPath : ys ++ zs
-    (_, (Added _):_) -> error "a file has been renamed to an added file"
-    (_, (Renamed _ _):_) -> error "two files have been renamed to the same file"
-    (_, (Modified _):_) ->
+    (ys, Deleted _:zs) -> Modified newPath : Deleted oPath : ys ++ zs
+    (_, Added _:_) -> error "a file has been renamed to an added file"
+    (_, Renamed _ _:_) -> error "two files have been renamed to the same file"
+    (_, Modified _:_) ->
       error "file has been modefied before another got the same name"
 addModification x@(Modified fp) xs =
   case span ((/= fp) . filePath) xs of
