@@ -1,7 +1,6 @@
 #!/usr/bin/env nix-shell
 #!nix-shell --pure -i runghc -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [protolude text containers either bytestring megaparsec] )"
 {-# OPTIONS_GHC -Wall -Werror #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- to test run:  echo "\lambda(x.x) \Rightarrow \lambda{}-calc" | ./tex2text # = λ(x.x) ⇒ λ-calc
@@ -14,13 +13,15 @@ import           Control.Monad
 import qualified Data.ByteString         as B
 import           Data.Either.Combinators
 import qualified Data.Map                as M
-import           Data.Text               hiding (map)
+import           Data.Text              (Text)
+import qualified         Data.Text                as Text
 import           Data.Text.Encoding
-import           Data.Text.IO            (hGetContents, putStrLn)
-import           Protolude               hiding (concat, putStr, putStrLn)
-import           System.IO               (hSetEncoding, stdin, utf8)
+import qualified Data.Text.IO           as Text (putStrLn)
+import           System.IO               (hSetEncoding, stdin, utf8, hGetContents)
 import           Text.Megaparsec         as P
-import           Text.Megaparsec.Char
+import           Text.Megaparsec.Char as P
+import Data.Maybe (fromMaybe)
+import Data.Void (Void)
 
 mapping :: [(Text, Text)]
 mapping
@@ -196,26 +197,27 @@ type Partition = [Fragment]
 
 resolve :: [(Text, Text)] -> Fragment -> Text
 resolve _ (Plain t) = t
-resolve m (Escaped e) = fromMaybe ("\\" `append` e) (M.lookup e $ M.fromList m)
+resolve m (Escaped e) = fromMaybe ("\\" `Text.append` e) (M.lookup e $ M.fromList m)
 
-type Parser = Parsec Void Text
+type Parser = Parsec Void String
 
 pPlain :: Parser Fragment
 pPlain =
-  Plain . pack <$> manyTill anySingle (lookAhead (void (char '\\')) <|> eof)
+  Plain . Text.pack <$> manyTill anySingle (lookAhead (void (char '\\')) <|> eof)
 
 pEscaped :: Parser Fragment
 pEscaped = do
   fragment <-
-    Escaped . pack <$>
-    (char '\\' >>
+    Escaped . Text.pack <$>
+    (P.char '\\' >>
      P.manyTill
        anySingle
-       (lookAhead (void (string "{}")) <|> lookAhead (void (char '\\')) <|>
+       (lookAhead (void (string "{}")) <|> lookAhead (void (P.char '\\')) <|>
         lookAhead (void spaceChar) <|>
         eof))
   -- an optional {} allows an escaped term to be followed by plain text
-  -- without any whitespace in between.
+  -- without any whitespace in between. If the fragment is derminated by
+  -- "{}" we have to throw it away.
   _ <- P.observing $ string "{}"
   return fragment
 
@@ -229,13 +231,13 @@ pPartition = do
     then return []
     else (:) <$> pFragment <*> pPartition
 
-parsePartition :: Text -> Either Text Partition
-parsePartition = mapLeft (pack . errorBundlePretty) . P.parse pPartition ""
+parsePartition :: String -> Either Text Partition
+parsePartition = mapLeft (Text.pack . errorBundlePretty) . P.parse pPartition ""
 
 main :: IO ()
 main = do
   hSetEncoding stdin utf8
   input <- hGetContents stdin
   case parsePartition input of
-    Left e     -> putStrLn e
-    Right part -> B.putStr . encodeUtf8 . concat $ map (resolve mapping) part
+    Left e     -> Text.putStrLn e
+    Right part -> B.putStr . encodeUtf8 . Text.concat $ map (resolve mapping) part
