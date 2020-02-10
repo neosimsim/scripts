@@ -1,5 +1,5 @@
 PREFIX=$(HOME)
-MANPREFIX=$(PREFIX)/share/man
+MANPREFIX=$(PREFIX)/man
 
 POSIX_BIN = \
 	1 \
