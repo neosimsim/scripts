@@ -43,6 +43,7 @@ POSIX_BIN = \
 	tmux-select-word \
 	tmux-ws \
 	ucmnt \
+	unfreeze-ghc-libs \
 	upper \
 	xname \
 	year \
