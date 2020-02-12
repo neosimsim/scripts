@@ -1,5 +1,8 @@
 #!/bin/sh
 
+version=8.8.2
+list=
+
 usage() {
 cat <<EOF
 g [-v GHCVERSION] CMD...
@@ -9,15 +12,12 @@ g -h
 Runs the given command with the given GHC version set as prefix of PATH.
 Expects ghc to be installed in $APPLICATIONS/ghc-$GHCVERSION.
 
--v GHCVERSION	specify the GHC version (default: 8.6.5)
+-v GHCVERSION	specify the GHC version (default: $version)
 -l		list installed ghc versions
 -h		print this help
 EOF
 exit 1
 }
-
-version=8.6.5
-list=
 
 while getopts v:l name
 do
