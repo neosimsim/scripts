@@ -1,3 +1,5 @@
+DEPRECATED in favour of neosimsim/myenv
+
 Collection of script files
 
 ## Configure
